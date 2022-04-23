@@ -31,8 +31,9 @@ var storage = multer.diskStorage({
 var upload = multer({ storage: storage });
 
 const corsOptions = {
-  origin: "*",
+  origin: "https://freelancing-webapp-client.herokuapp.com",
   credentials: true, //access-control-allow-credentials:true
+  methods: 'GET,POST,PUT,PATCH,DELETE',
   optionSuccessStatus: 200,
 };
 app.use(cors(corsOptions)); // Use this after the variable declaration
