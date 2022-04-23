@@ -12,22 +12,24 @@ const http = require("http");
 const app = express();
 
 
+var fs = require("fs");
+var path = require("path");
 const corsOptions = {
   origin: "*",
   credentials: true, //access-control-allow-credentials:true
   methods: ["GET", "HEAD", "PUT", "PATCH", "POST", "DELETE"],
   optionSuccessStatus: 200,
+  origin: true
 };
-app.use((req, res, next) => {
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header("Access-Control-Allow-Credentials", true);
-  res.header("Access-Control-Allow-Methods", "GET,HEAD,PUT,PATCH,POST,DELETE");
-  res.header("Access-Control-Allow-Headers", "Origin,X-Requested-With,Content-Type,Accept,content-type,application/json");
-  next();
-})
+app.use(cors(corsOptions)); // Use this after the variable declaration
+// app.use((req, res, next) => {
+//   res.header("Access-Control-Allow-Origin", "*");
+//   res.header("Access-Control-Allow-Credentials", true);
+//   res.header("Access-Control-Allow-Methods", "GET,HEAD,PUT,PATCH,POST,DELETE");
+//   res.header("Access-Control-Allow-Headers", "Origin,X-Requested-With,Content-Type,Accept,content-type,application/json");
+//   next();
+// })
 
-var fs = require("fs");
-var path = require("path");
 // set up multer for storing uploaded files image upload database
 var multer = require("multer");
 var storage = multer.diskStorage({
@@ -41,7 +43,6 @@ var storage = multer.diskStorage({
 var upload = multer({ storage: storage });
 
 
-// app.use(cors(corsOptions)); // Use this after the variable declaration
 function ignoreFavicon(req, res, next) {
   if (req.originalUrl.includes('favicon.ico')) {
     res.status(204).end()
