@@ -33,7 +33,7 @@ var upload = multer({ storage: storage });
 const corsOptions = {
   origin: "https://freelancing-webapp-client.herokuapp.com",
   credentials: true, //access-control-allow-credentials:true
-  methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+  methods: ["GET", "HEAD", "PUT", "PATCH", "POST", "DELETE"],
   optionSuccessStatus: 200,
 };
 app.use(cors(corsOptions)); // Use this after the variable declaration
