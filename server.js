@@ -714,6 +714,7 @@ const headers = {
 
 const getRoom = (room) => {
   return fetch(`https://api.daily.co/v1/rooms/${room}`, {
+    mode: 'cors',
     method: "GET",
     origin: "*",
     headers,
@@ -727,6 +728,7 @@ const getRoom = (room) => {
 
 const createRoom = (room) => {
   return fetch("https://api.daily.co/v1/rooms", {
+    mode: 'cors',
     method: "POST",
     headers,
     origin: "*",
