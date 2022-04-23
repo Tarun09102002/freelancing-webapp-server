@@ -37,6 +37,14 @@ const corsOptions = {
   optionSuccessStatus: 200,
 };
 app.use(cors(corsOptions)); // Use this after the variable declaration
+function ignoreFavicon(req, res, next) {
+  if (req.originalUrl.includes('favicon.ico')) {
+    res.status(204).end()
+  }
+  next();
+}
+
+app.use(ignoreFavicon);
 
 const { categoryImageData } = require("./categoryData");
 const {
