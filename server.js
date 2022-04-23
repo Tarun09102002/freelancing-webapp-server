@@ -7,7 +7,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
 
-const socketio = require("socket.io");
+// const socketio = require("socket.io");
 const http = require("http");
 const app = express();
 
@@ -231,7 +231,7 @@ app.post("/feedback", (req, res, err) => {
   const body = req.body;
   if ("freelancer" in body) {
     addFeedbackFromClient(body)
-      .then(() => {})
+      .then(() => { })
       .catch((error) => {
         console.log(error);
       });
@@ -257,7 +257,7 @@ app.post("/feedback", (req, res, err) => {
     });
   } else {
     addFeedbackFromFreelancer(req.body)
-      .then(() => {})
+      .then(() => { })
       .catch((error) => {
         console.log(error);
       });
@@ -309,7 +309,7 @@ app.post("/updatewebsitefeedbackvotes", (req, res, err) => {
     .then((response) => {
       res.send({ result: response });
     })
-    .catch((error) => {});
+    .catch((error) => { });
 });
 
 app.post("/findtalent/postwork", (req, res, err) => {
