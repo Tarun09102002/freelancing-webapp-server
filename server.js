@@ -19,7 +19,6 @@ const corsOptions = {
   credentials: true, //access-control-allow-credentials:true
   methods: ["GET", "HEAD", "PUT", "PATCH", "POST", "DELETE"],
   optionSuccessStatus: 200,
-  origin: true
 };
 app.use(cors(corsOptions)); // Use this after the variable declaration
 // app.use((req, res, next) => {
