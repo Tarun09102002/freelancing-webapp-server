@@ -148,8 +148,9 @@ const Server = app.listen(PORT, () => {
 
 const io = require("socket.io")(Server, {
   cors: {
-    origin: "http://localhost:3000",
-    methods: ["GET", "POST"],
+    origin: "https://freelancing-webapp-client.herokuapp.com",
+    credentials: true, //access-control-allow-credentials:true
+    methods: ["GET", "HEAD", "PUT", "PATCH", "POST", "DELETE"],
   },
 });
 
