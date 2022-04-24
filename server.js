@@ -15,7 +15,7 @@ const app = express();
 var fs = require("fs");
 var path = require("path");
 const corsOptions = {
-  origin: "https://freelancing-webapp-client.herokuapp.com",
+  origin: "*",
   credentials: true, //access-control-allow-credentials:true
   allowedHeaders: [
     "Access-Control-Allow-Origin",
