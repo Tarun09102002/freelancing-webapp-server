@@ -28,7 +28,7 @@ const corsOptions = {
   methods: ["GET", "HEAD", "PUT", "PATCH", "POST", "DELETE"],
   optionSuccessStatus: 200,
 };
-app.use(cors(corsOptions)); // Use this after the variable declaration
+// Use this after the variable declaration
 // app.use((req, res, next) => {
 //   res.header("Access-Control-Allow-Origin", "*");
 //   res.header("Access-Control-Allow-Credentials", true);
@@ -144,7 +144,7 @@ app.use(logger("dev")); //for video calling
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.json({ limit: "50mb" }));
 app.use(bodyParser.json());
-
+app.use(cors(corsOptions));
 // app.post("/post", (req, res, err) => {});
 
 const PORT = process.env.PORT || 8080;
