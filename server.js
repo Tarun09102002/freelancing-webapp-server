@@ -144,7 +144,7 @@ app.use(logger("dev")); //for video calling
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.json({ limit: "50mb" }));
 app.use(bodyParser.json());
-app.use(cors());
+app.use(cors(corsOptions));
 // app.post("/post", (req, res, err) => {});
 
 const PORT = process.env.PORT || 8080;
