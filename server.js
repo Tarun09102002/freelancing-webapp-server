@@ -17,6 +17,14 @@ var path = require("path");
 const corsOptions = {
   origin: "https://freelancing-webapp-client.herokuapp.com",
   credentials: true, //access-control-allow-credentials:true
+  allowedHeaders: [
+    "Access-Control-Allow-Origin",
+    "Origin",
+    "X-Requested-With",
+    "Content-Type",
+    "Accept",
+    "Authorization",
+  ],
   methods: ["GET", "HEAD", "PUT", "PATCH", "POST", "DELETE"],
   optionSuccessStatus: 200,
 };
@@ -729,7 +737,6 @@ const getRoom = (room) => {
 
 const createRoom = (room) => {
   return fetch("https://api.daily.co/v1/rooms", {
-    mode: 'cors',
     method: "POST",
     headers,
     origin: "*",
