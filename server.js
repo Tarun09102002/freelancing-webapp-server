@@ -7,35 +7,16 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
 
-// const socketio = require("socket.io");
+const socketio = require("socket.io");
 const http = require("http");
 const app = express();
 
+// const server = http.createServer(app);
+// const io = socketio(server);
+// const Server = app.listen(8080);
 
 var fs = require("fs");
 var path = require("path");
-const corsOptions = {
-  origin: "*",
-  credentials: true, //access-control-allow-credentials:true
-  allowedHeaders: [
-    "Access-Control-Allow-Origin",
-    "Origin",
-    "X-Requested-With",
-    "Content-Type",
-    "Accept",
-    "Authorization",
-  ],
-  methods: ["GET", "HEAD", "PUT", "PATCH", "POST", "DELETE"],
-  optionSuccessStatus: 200,
-};
-// Use this after the variable declaration
-// app.use((req, res, next) => {
-//   res.header("Access-Control-Allow-Origin", "*");
-//   res.header("Access-Control-Allow-Credentials", true);
-//   res.header("Access-Control-Allow-Methods", "GET,HEAD,PUT,PATCH,POST,DELETE");
-//   res.header("Access-Control-Allow-Headers", "Origin,X-Requested-With,Content-Type,Accept,content-type,application/json");
-//   next();
-// })
 
 // set up multer for storing uploaded files image upload database
 var multer = require("multer");
@@ -49,15 +30,12 @@ var storage = multer.diskStorage({
 });
 var upload = multer({ storage: storage });
 
-
-function ignoreFavicon(req, res, next) {
-  if (req.originalUrl.includes('favicon.ico')) {
-    res.status(204).end()
-  }
-  next();
-}
-
-app.use(ignoreFavicon);
+const corsOptions = {
+  origin: "*",
+  credentials: true, //access-control-allow-credentials:true
+  optionSuccessStatus: 200,
+};
+app.use(cors(corsOptions)); // Use this after the variable declaration
 
 const { categoryImageData } = require("./categoryData");
 const {
@@ -95,6 +73,7 @@ const {
   addFeedback,
   addFeedbackFromClient,
   addFeedbackFromFreelancer,
+  getTalentDataForPartnerPage,
 } = require("./BreakDependency");
 const {
   getRoomNo,
@@ -123,6 +102,7 @@ const {
   getUserProfileDataUsingUsername,
   getRatingsAndUsername,
   getUserImage,
+  getUserProfileEditData,
 } = require("./UserProfileData");
 const {
   addUserForChatNotification,
@@ -144,7 +124,7 @@ app.use(logger("dev")); //for video calling
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.json({ limit: "50mb" }));
 app.use(bodyParser.json());
-app.use(cors(corsOptions));
+
 // app.post("/post", (req, res, err) => {});
 
 const PORT = process.env.PORT || 8080;
@@ -156,9 +136,8 @@ const Server = app.listen(PORT, () => {
 
 const io = require("socket.io")(Server, {
   cors: {
-    origin: "https://freelancing-webapp-client.herokuapp.com",
-    credentials: true, //access-control-allow-credentials:true
-    methods: ["GET", "HEAD", "PUT", "PATCH", "POST", "DELETE"],
+    origin: "*",
+    methods: ["GET", "POST"],
   },
 });
 
@@ -202,6 +181,7 @@ app.post("/signup", (req, res, err) => {
     });
   } catch (error) {
     console.log(error);
+    res.status(500).send({ error: "An error occurred" });
   }
 });
 
@@ -224,6 +204,7 @@ app.get("/findtalent", (req, res, err) => {
     })
     .catch((error) => {
       console.log(error);
+      res.status(500).send({ error: "An error occurred" });
     });
 });
 
@@ -257,6 +238,7 @@ app.post("/feedback", (req, res, err) => {
       .then(() => { })
       .catch((error) => {
         console.log(error);
+        res.status(500).send({ error: "An error occurred" });
       });
     getUserImage(body.client).then((image) => {
       addFeedbackNotification({
@@ -283,6 +265,7 @@ app.post("/feedback", (req, res, err) => {
       .then(() => { })
       .catch((error) => {
         console.log(error);
+        res.status(500).send({ error: "An error occurred" });
       });
   }
 });
@@ -298,6 +281,7 @@ app.post("/userprofileinput", (req, res, err) => {
     })
     .catch((error) => {
       console.log(error);
+      res.status(500).send({ error: "An error occurred" });
     });
 });
 
@@ -311,6 +295,7 @@ app.post("/websitefeedback", (req, res, err) => {
     })
     .catch((error) => {
       console.log(error);
+      res.status(500).send({ error: "An error occurred" });
     });
 });
 
@@ -401,6 +386,36 @@ app.get("/findtalent/:category", (req, res, err) => {
   }
 });
 
+app.get("/findpartner", (req, res, err) => {
+  if (err) {
+    console.log(err);
+  }
+  try {
+    getTalentDataForPartnerPage().then((items) => {
+      getWorkFilterData().then((filterData) => {
+        res.send({ items: items, filterData: filterData });
+      });
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).send("An error occurred", err);
+  }
+});
+
+app.get("/editprofile/:username", (req, res, err) => {
+  if (err) {
+    console.log(err);
+  }
+  getUserProfileEditData(req.params.username)
+    .then((response) => {
+      res.send({ result: response });
+    })
+    .catch((error) => {
+      console.log(error);
+      res.status(500).send({ error: "An error occurred" });
+    });
+});
+
 app.get("/userprofile/allpost/:username", (req, res, err) => {
   const username = req.params.username;
   getWorkPostedDataByUsername(username)
@@ -409,6 +424,7 @@ app.get("/userprofile/allpost/:username", (req, res, err) => {
     })
     .catch((error) => {
       console.log(error);
+      res.status(500).send({ error: "An error occurred" });
     });
 });
 
@@ -420,6 +436,7 @@ app.get("/userprofile/allwork/:username", (req, res, err) => {
     })
     .catch((error) => {
       console.log(error);
+      res.status(500).send({ error: "An error occurred" });
     });
 });
 
@@ -442,6 +459,7 @@ app.get("/userprofiledata/:username", (req, res, err) => {
     })
     .catch((error) => {
       console.log(error);
+      res.status(500).send({ error: "An error occurred" });
     });
 });
 
@@ -723,9 +741,7 @@ const headers = {
 
 const getRoom = (room) => {
   return fetch(`https://api.daily.co/v1/rooms/${room}`, {
-    mode: 'cors',
     method: "GET",
-    origin: "*",
     headers,
   })
     .then((res) => res.json())
@@ -739,7 +755,6 @@ const createRoom = (room) => {
   return fetch("https://api.daily.co/v1/rooms", {
     method: "POST",
     headers,
-    origin: "*",
     body: JSON.stringify({
       name: room,
       properties: {
